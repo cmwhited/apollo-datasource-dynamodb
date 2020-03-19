@@ -1,0 +1,89 @@
+{
+  "name": "apollo-datasource-dynamodb",
+  "version": "1.0.0",
+  "description": "Apollo DataSource framework for AWS DynamoDB",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "check-types": "tsc",
+    "lint:eslint": "eslint --ext .ts . --ignore-path .gitignore",
+    "format:eslint": "eslint --ext .ts . --fix --ignore-path .gitignore",
+    "lint:prettier": "prettier \"**/*.ts\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "format:prettier": "prettier \"**/*.ts\" --write --ignore-path .gitignore",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "clean-report": "rimraf ./coverage",
+    "test": "npm run clean-report && jest -c jest.config.js --runInBand --detectOpenHandles",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "prebuild": "rimraf ./lib ./lib-esm",
+    "build": "tsc && tsc -m es6 --outDir lib-esm",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "homepage": "https://github.com/cmwhited/apollo-datasource-dynamodb",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cmwhited/apollo-datasource-dynamodb"
+  },
+  "bugs": {
+    "url": "https://github.com/cmwhited/apollo-datasource-dynamodb"
+  },
+  "author": "Chris Whited <cmwhited1990@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "keywords": [
+    "apollo",
+    "graphql",
+    "dynamodb",
+    "datasource",
+    "data source"
+  ],
+  "files": [
+    "/lib"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "dependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.8.3",
+    "apollo-datasource": "^0.7.0",
+    "apollo-server-caching": "^0.5.1",
+    "apollo-server-errors": "^2.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
+    "@babel/plugin-transform-destructuring": "^7.8.8",
+    "@babel/plugin-transform-regenerator": "^7.8.7",
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/preset-typescript": "^7.8.3",
+    "@babel/runtime": "^7.8.7",
+    "@types/jest": "^25.1.4",
+    "@types/node": "^13.9.2",
+    "@typescript-eslint/eslint-plugin": "^2.24.0",
+    "@typescript-eslint/parser": "^2.24.0",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-transform-builtin-extend": "^1.1.2",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jest": "^23.8.2",
+    "eslint-plugin-prettier": "^3.1.2",
+    "fork-ts-checker-webpack-plugin": "^4.1.0",
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^25.2.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.0",
+    "webpack-node-externals": "^1.7.2"
+  }
+}
