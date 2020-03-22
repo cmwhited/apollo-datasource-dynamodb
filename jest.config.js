@@ -3,9 +3,11 @@ module.exports = {
   transform: {
     '^.+\\.ts?$': 'ts-jest',
   },
-  testRegex: '(test|spec)\\.ts$',
+  preset: 'jest-dynalite',
+  testRegex: '/__tests__/.*\\.spec\\.ts$',
+  testPathIgnorePatterns: ['/node_modules/', '/lib/'],
   collectCoverage: true,
-  collectCoverageFrom: ['**/src/**/*', '!**/node_modules/'],
+  collectCoverageFrom: ['**/src/**/*', '!**/node_modules/', '!**/src/index.ts'],
   coverageThreshold: {
     global: {
       branches: 95,
