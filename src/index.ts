@@ -1,1 +1,2 @@
-export const testing = (): void => console.log('testing');
+export { DynamoDBCache, DynamoDBCacheImpl } from './DynamoDBCache';
+export { DynamoDBDataSource } from './DynamoDBDataSource';
