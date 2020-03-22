@@ -6,6 +6,10 @@ import { DynamoDBCache, DynamoDBCacheImpl, CACHE_PREFIX_KEY } from './DynamoDBCa
 import { buildItemsCacheMap, buildCacheKey, buildKey } from './utils';
 import { CacheKeyItemMap } from './types';
 
+/**
+ * Data Source to interact with DynamoDB.
+ * @param ITEM the type of the item to retrieve from the DynamoDB table
+ */
 export abstract class DynamoDBDataSource<ITEM = unknown, TContext = unknown> extends DataSource {
   readonly dynamoDbDocClient: DynamoDB.DocumentClient;
   readonly tableName!: string;
