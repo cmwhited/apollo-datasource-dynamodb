@@ -54,10 +54,12 @@ import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
 class TestHashOnly extends DynamoDBDataSource<TestHashOnlyItem> {
   private readonly tableName = 'test_hash_only';
-  private readonly tableKeySchema: DocumentClient.KeySchema = {
-    AttributeName: 'id',
-    KeyType: 'HASH',
-  };
+  private readonly tableKeySchema: DocumentClient.KeySchema = [
+    {
+      AttributeName: 'id',
+      KeyType: 'HASH',
+    },
+  ];
   private readonly ttl = 30 * 60; // 30minutes
 
   constructor(config?: ClientConfiguration) {
