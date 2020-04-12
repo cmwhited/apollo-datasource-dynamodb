@@ -30,7 +30,6 @@ export abstract class DynamoDBDataSource<ITEM = unknown, TContext = unknown> ext
   initialize({ context, cache }: DataSourceConfig<TContext>): void {
     this.context = context;
     this.dynamodbCache = new DynamoDBCacheImpl(this.dynamoDbDocClient, cache);
-    console.log('DynamoDBDataSource has been initialized with context', this.context);
   }
 
   /**
