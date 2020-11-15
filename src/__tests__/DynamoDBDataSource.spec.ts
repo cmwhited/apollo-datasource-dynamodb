@@ -359,10 +359,14 @@ describe('DynamoDBDataSource', () => {
     dynamodbCacheSetInCacheMock.mockResolvedValueOnce();
 
     const actual = await testHashOnly.update(
-      givenKey,
-      givenUpdateExpression,
-      givenExpressionAttributeNames,
-      givenExpressionAttributeValues,
+      {
+        TableName: testHashOnly.tableName,
+        Key: givenKey,
+        ReturnValues: 'ALL_NEW',
+        UpdateExpression: givenUpdateExpression,
+        ExpressionAttributeNames: givenExpressionAttributeNames,
+        ExpressionAttributeValues: givenExpressionAttributeValues,
+      },
       ttl
     );
     const { Item } = await testHashOnly.dynamoDbDocClient
@@ -411,12 +415,14 @@ describe('DynamoDBDataSource', () => {
       ':test': 'testing_updated',
     };
 
-    const actual = await testHashOnly.update(
-      givenKey,
-      givenUpdateExpression,
-      givenExpressionAttributeNames,
-      givenExpressionAttributeValues
-    );
+    const actual = await testHashOnly.update({
+      TableName: testHashOnly.tableName,
+      Key: givenKey,
+      ReturnValues: 'ALL_NEW',
+      UpdateExpression: givenUpdateExpression,
+      ExpressionAttributeNames: givenExpressionAttributeNames,
+      ExpressionAttributeValues: givenExpressionAttributeValues,
+    });
     const { Item } = await testHashOnly.dynamoDbDocClient
       .get({
         TableName: testHashOnly.tableName,
@@ -458,7 +464,7 @@ describe('DynamoDBDataSource', () => {
 
     dynamodbCacheRemoveItemFromCacheMock.mockResolvedValueOnce();
 
-    await testHashOnly.delete(givenKey);
+    await testHashOnly.delete({ TableName: testHashOnly.tableName, Key: givenKey });
 
     const { Item } = await testHashOnly.dynamoDbDocClient
       .get({
