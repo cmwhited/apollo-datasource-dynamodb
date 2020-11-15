@@ -93,14 +93,11 @@ export abstract class DynamoDBDataSource<ITEM = unknown, TContext = unknown> ext
 
   /**
    * Store the item in the table and add the item to the cache
-   * @param item the item to store in the table
+   * @param putItemInput parameters to pass in to the dynamodb put operation
    * @param ttl the time-to-live value of how long to persist the item in the cache
    */
-  async put(item: ITEM, ttl?: number): Promise<ITEM> {
-    const putItemInput: DynamoDB.DocumentClient.PutItemInput = {
-      TableName: this.tableName,
-      Item: item,
-    };
+  async put(putItemInput: DynamoDB.DocumentClient.PutItemInput, ttl?: number): Promise<ITEM> {
+    const item: ITEM = putItemInput.Item as ITEM;
     await this.dynamoDbDocClient.put(putItemInput).promise();
 
     if (ttl) {
