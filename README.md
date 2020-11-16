@@ -8,7 +8,7 @@ View the [Apollo Server documentation for data sources](https://www.apollographq
 
 ## Usage
 
-To get stated, install the `apollo-datasource-dynamodb` packageL
+To get started, install the `apollo-datasource-dynamodb` package
 
 ```bash
 # with npm
@@ -129,6 +129,79 @@ export const resolvers: IResolvers = {
   },
 };
 ```
+
+#### v1.1.0+ Example With Initialized Client
+
+As of `v1.1.0+`, another optional parameter was added to the `DynamoDBDataSource` class constructor that accepts an intialized `DynamoDB.DocumentClient` instance and uses this instance in the class instead of initializing a new one.
+
+Here is an example of how to use this param with a class that extends the `DynamoDBDataSource`:
+
+```ts
+// ./src/data-sources/test-with-client.datasource.ts
+
+import { DynamoDBDataSource } from 'apollo-datasource-dynamodb';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+
+class TestWithClient extends DynamoDBDataSource<TestItem> {
+  private readonly tableName = 'test_with_client';
+  private readonly tableKeySchema: DocumentClient.KeySchema = [
+    {
+      AttributeName: 'id',
+      KeyType: 'HASH',
+    },
+  ];
+  private readonly ttl = 30 * 60; // 30minutes
+
+  constructor(client: DocumentClient) {
+    super(this.tableName, this.tableKeySchema, null, client);
+  }
+
+  async getTestHashOnlyItem(id: string): Promise<TestHashOnlyItem> {
+    const getItemInput: DocumentClient.GetItemInput = {
+      TableName: this.tableName,
+      ConsistentRead: true,
+      Key: { id },
+    };
+    return this.getItem(getItemInput, this.ttl);
+  }
+
+  async scanForTestHashOnlyItems(): Promise<TestHashOnlyItem[]> {
+    const scanInput: DocumentClient.ScanInput = {
+      TableName: this.tableName,
+      ConsistentRead: true,
+    };
+    return this.scan(scanInput, this.ttl);
+  }
+}
+```
+
+And then to utilize this instance as a data source in the `ApolloServer` instance:
+
+```ts
+// ./src/server.ts
+
+import { ApolloServer } from 'apollo-server-lambda';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+
+import { TestWithClient } from './data-sources/test-with-client.datasource';
+
+const client: DocumentClient = new DocumentClient({
+  apiVersion: 'latest',
+  region: 'us-east-1',
+});
+
+const testWithClient = new TestWithClient(client);
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  dataSources: () => ({
+    testWithClient,
+  }),
+});
+```
+
+This paramater was added to allow for use of the library with already initialized `DynamoDB.DocumentClient` instances for use with dependency injection, etc.
 
 ## API
 
