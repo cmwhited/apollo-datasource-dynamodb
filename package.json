@@ -1,5 +1,5 @@
 {
-  "name": "@cmwhited/apollo-datasource-dynamodb",
+  "name": "apollo-datasource-dynamodb",
   "version": "1.0.3",
   "description": "Apollo DataSource framework for AWS DynamoDB",
   "main": "lib/index.js",
