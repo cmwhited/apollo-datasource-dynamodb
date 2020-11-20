@@ -130,7 +130,7 @@ module.exports = {
     'comma-style': [2, 'last'],
     'eol-last': 2,
     'func-style': 0, // expressions vs declrations?
-    indent: [2, 2, { SwitchCase: 1 }],
+    indent: 0,
     'key-spacing': [2, { beforeColon: false, afterColon: true }],
     'keyword-spacing': 2,
     'linebreak-style': [2, 'unix'],
@@ -144,7 +144,7 @@ module.exports = {
     'no-trailing-spaces': 2,
     'no-unneeded-ternary': 2,
     'object-curly-spacing': [2, 'always'],
-    'operator-linebreak': [2, 'after'],
+    'operator-linebreak': 0,
     'padded-blocks': [2, 'never'],
     quotes: [2, 'single'],
     'semi-spacing': [2, { before: false, after: true }],
@@ -182,7 +182,6 @@ module.exports = {
     'jest/no-focused-tests': 'error',
     'jest/no-identical-title': 'error',
     'jest/valid-expect': 'error',
-
     'prettier/prettier': [
       'error',
       {
