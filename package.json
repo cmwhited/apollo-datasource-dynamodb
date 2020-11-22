@@ -1,5 +1,5 @@
 {
-  "name": "apollo-datasource-dynamodb",
+  "name": "@newsperform/apollo-datasource-dynamodb",
   "version": "1.1.0",
   "description": "Apollo DataSource framework for AWS DynamoDB",
   "main": "lib/index.js",
