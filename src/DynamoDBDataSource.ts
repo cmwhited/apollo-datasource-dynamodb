@@ -17,14 +17,29 @@ export abstract class DynamoDBDataSource<ITEM = unknown, TContext = unknown> ext
   dynamodbCache!: DynamoDBCache<ITEM>;
   context!: TContext;
 
-  constructor(tableName: string, tableKeySchema: DynamoDB.DocumentClient.KeySchema, config?: ClientConfiguration) {
+  /**
+   * Create a `DynamoDBDataSource` instance with the supplied params
+   * @param tableName the name of the DynamoDB table the class will be interacting with
+   * @param tableKeySchema the key structure schema of the table
+   * @param config an optional ClientConfiguration object to use in building the DynamoDB.DocumentClient
+   * @param client an optional initialized DynamoDB.Document client instance to use to set the client in the class instance
+   */
+  constructor(
+    tableName: string,
+    tableKeySchema: DynamoDB.DocumentClient.KeySchema,
+    config?: ClientConfiguration,
+    client?: DynamoDB.DocumentClient
+  ) {
     super();
     this.tableName = tableName;
     this.tableKeySchema = tableKeySchema;
-    this.dynamoDbDocClient = new DynamoDB.DocumentClient({
-      apiVersion: '2012-08-10',
-      ...config,
-    });
+    this.dynamoDbDocClient =
+      client != null
+        ? client
+        : new DynamoDB.DocumentClient({
+            apiVersion: 'latest',
+            ...config,
+          });
   }
 
   initialize({ context, cache }: DataSourceConfig<TContext>): void {
