@@ -145,9 +145,12 @@ export abstract class DynamoDBDataSource<ITEM = unknown, TContext = unknown> ext
    * Delete the given item from the table
    * @param deleteItemInput the input to be passed to dynamodb delete
    */
-  async delete(deleteItemInput: DynamoDB.DocumentClient.DeleteItemInput): Promise<void> {
-    await this.dynamoDbDocClient.delete(deleteItemInput).promise();
+  async delete(deleteItemInput: DynamoDB.DocumentClient.DeleteItemInput): Promise<ITEM> {
+    const output = await this.dynamoDbDocClient.delete(deleteItemInput).promise();
+    const deleted: ITEM = output.Attributes as ITEM;
 
     await this.dynamodbCache.removeItemFromCache(this.tableName, deleteItemInput.Key);
+
+    return deleted;
   }
 }

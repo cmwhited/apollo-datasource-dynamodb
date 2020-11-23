@@ -464,7 +464,13 @@ describe('DynamoDBDataSource', () => {
 
     dynamodbCacheRemoveItemFromCacheMock.mockResolvedValueOnce();
 
-    await testHashOnly.delete({ TableName: testHashOnly.tableName, Key: givenKey });
+    const deleted = await testHashOnly.delete({
+      TableName: testHashOnly.tableName,
+      Key: givenKey,
+      ReturnValues: 'ALL_OLD',
+    });
+
+    expect(deleted).toEqual(itemToDelete);
 
     const { Item } = await testHashOnly.dynamoDbDocClient
       .get({
