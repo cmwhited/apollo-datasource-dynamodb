@@ -108,14 +108,11 @@ export abstract class DynamoDBDataSource<ITEM = unknown, TContext = unknown> ext
 
   /**
    * Store the item in the table and add the item to the cache
-   * @param item the item to store in the table
+   * @param putItemInput parameters to pass in to the dynamodb put operation
    * @param ttl the time-to-live value of how long to persist the item in the cache
    */
-  async put(item: ITEM, ttl?: number): Promise<ITEM> {
-    const putItemInput: DynamoDB.DocumentClient.PutItemInput = {
-      TableName: this.tableName,
-      Item: item,
-    };
+  async put(putItemInput: DynamoDB.DocumentClient.PutItemInput, ttl?: number): Promise<ITEM> {
+    const item: ITEM = putItemInput.Item as ITEM;
     await this.dynamoDbDocClient.put(putItemInput).promise();
 
     if (ttl) {
@@ -129,29 +126,15 @@ export abstract class DynamoDBDataSource<ITEM = unknown, TContext = unknown> ext
 
   /**
    * Update the item in the table and reset the item in the cache
-   * @param key the key of the item in the table to update
+   * @param updateItemInput the input to be passed to dynamodb update
    * @param ttl the time-to-live value of how long to persist the item in the cache
    */
-  async update(
-    key: DynamoDB.DocumentClient.Key,
-    updateExpression: DynamoDB.DocumentClient.UpdateExpression,
-    expressionAttributeNames: DynamoDB.DocumentClient.ExpressionAttributeNameMap,
-    expressionAttributeValues: DynamoDB.DocumentClient.ExpressionAttributeValueMap,
-    ttl?: number
-  ): Promise<ITEM> {
-    const updateItemInput: DynamoDB.DocumentClient.UpdateItemInput = {
-      TableName: this.tableName,
-      Key: key,
-      ReturnValues: 'ALL_NEW',
-      UpdateExpression: updateExpression,
-      ExpressionAttributeNames: expressionAttributeNames,
-      ExpressionAttributeValues: expressionAttributeValues,
-    };
+  async update(updateItemInput: DynamoDB.DocumentClient.UpdateItemInput, ttl?: number): Promise<ITEM> {
     const output = await this.dynamoDbDocClient.update(updateItemInput).promise();
     const updated: ITEM = output.Attributes as ITEM;
 
     if (updated && ttl) {
-      const cacheKey: string = buildCacheKey(CACHE_PREFIX_KEY, this.tableName, key);
+      const cacheKey: string = buildCacheKey(CACHE_PREFIX_KEY, this.tableName, updateItemInput.Key);
       await this.dynamodbCache.setInCache(cacheKey, updated, ttl);
     }
 
@@ -160,16 +143,14 @@ export abstract class DynamoDBDataSource<ITEM = unknown, TContext = unknown> ext
 
   /**
    * Delete the given item from the table
-   * @param key the key of the item to delete from the table
+   * @param deleteItemInput the input to be passed to dynamodb delete
    */
-  async delete(key: DynamoDB.DocumentClient.Key): Promise<void> {
-    const deleteItemInput: DynamoDB.DocumentClient.DeleteItemInput = {
-      TableName: this.tableName,
-      Key: key,
-    };
+  async delete(deleteItemInput: DynamoDB.DocumentClient.DeleteItemInput): Promise<ITEM> {
+    const output = await this.dynamoDbDocClient.delete(deleteItemInput).promise();
+    const deleted: ITEM = output.Attributes as ITEM;
 
-    await this.dynamoDbDocClient.delete(deleteItemInput).promise();
+    await this.dynamodbCache.removeItemFromCache(this.tableName, deleteItemInput.Key);
 
-    await this.dynamodbCache.removeItemFromCache(this.tableName, key);
+    return deleted;
   }
 }

@@ -1,5 +1,7 @@
 # Apollo DynamoDB Data Source
 
+**This package is forked from https://github.com/cmwhited/apollo-datasource-dynamodb and has gone through major update**
+
 This package exports a ([`DynamoDBDataSource`](https://github.com/cmwhited/apollo-datasource-dynamodb/blob/master/src/DynamoDBDataSource.ts)) class which is used for fetching data from a DynamoDB Table and exposing it via GraphQL within Apollo Server.
 
 ## Documentation
@@ -274,9 +276,9 @@ const items: TestHashOnlyItem[] = await this.scan(scanInput, ttl);
 
 ### put
 
-`this.put(item, 180)`
+`this.put(putItemInput, 180)`
 
-Saves the given item to the table. If a `ttl` value is provided it will also add the item to the cache
+Saves the given item in the putItemInput to the table. If a `ttl` value is provided it will also add the item to the cache
 
 [DynamoDB.DocumentClient.put](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property)
 
@@ -284,12 +286,22 @@ Saves the given item to the table. If a `ttl` value is provided it will also add
 
 ```ts
 const item: TestHashOnlyItem = {
-  id: 'testId2',
-  test: 'testing2',
-};
+      id: 'testId2',
+      test: 'testing2',
+    };
 const ttl = 30 * 60; // 30minutes
 
-const created: TestHashOnlyItem = await this.put(item, ttl);
+const putItemInput: DocumentClient.PutItemInput = {
+  TableName: testHashOnly.tableName,
+  Item: item,
+  ConditionExpression: 'id <> :value',
+  ExpressionAttributeValues: {
+    ':value': 'testing'
+  },
+  ReturnValues: 'NONE',
+};
+
+const created: TestHashOnlyItem = await testHashOnly.put(putItemInput, ttl);
 ```
 
 ### update
