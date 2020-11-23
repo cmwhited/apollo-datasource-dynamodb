@@ -1,6 +1,6 @@
 # Apollo DynamoDB Data Source
 
-**This package is forked from https://github.com/cmwhited/apollo-datasource-dynamodb**
+**This package is forked from https://github.com/cmwhited/apollo-datasource-dynamodb and has gone through major update**
 
 This package exports a ([`DynamoDBDataSource`](https://github.com/cmwhited/apollo-datasource-dynamodb/blob/master/src/DynamoDBDataSource.ts)) class which is used for fetching data from a DynamoDB Table and exposing it via GraphQL within Apollo Server.
 

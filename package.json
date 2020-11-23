@@ -23,15 +23,15 @@
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags"
   },
-  "homepage": "https://github.com/cmwhited/apollo-datasource-dynamodb",
+  "homepage": "https://bitbucket.org/punterswebteam/apollo-datasource-dynamodb/src/updated-api/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cmwhited/apollo-datasource-dynamodb.git"
+    "url": "git+https://bitbucket.org/punterswebteam/apollo-datasource-dynamodb/src/updated-api/"
   },
   "bugs": {
-    "url": "https://github.com/cmwhited/apollo-datasource-dynamodb"
+    "url": "https://bitbucket.org/punterswebteam/apollo-datasource-dynamodb/src/updated-api/"
   },
-  "author": "Chris Whited <cmwhited1990@gmail.com>",
+  "author": "Dina Basumatary",
   "license": "MIT",
   "private": false,
   "keywords": [
